@@ -1,0 +1,36 @@
+ssh root@47.254.214.176
+
+root@iZ8psi143pa0pfeynfwourZ:~# sudo apt install default-jdk
+
+root@iZ8psi143pa0pfeynfwourZ:~# java --version
+
+root@iZ8psi143pa0pfeynfwourZ:~# curl -O https://downloads.apache.org/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz 
+
+root@iZ8psi143pa0pfeynfwourZ:~# tar xvzf spark-2.4.7-bin-hadoop2.7.tgz
+
+root@iZ8psi143pa0pfeynfwourZ:~#  sudo mv spark-2.4.7-bin-hadoop2.7 /opt/spark
+
+root@iZ8psi143pa0pfeynfwourZ:~# cd /opt/spark/
+
+root@iZ8psi143pa0pfeynfwourZ:/opt/spark# sudo sbin/start-master.sh
+
+root@iZ8psi143pa0pfeynfwourZ:/opt/spark# cat /opt/spark/logs/spark-root-org.apache.spark.deploy.master.Master-1-iZ8psi143pa0pfeynfwourZ.out
+
+root@iZ8psi143pa0pfeynfwourZ:/opt/spark# sudo sbin/start-slave.sh spark://iZ8psi143pa0pfeynfwourZ:7077
+
+root@iZ8psi143pa0pfeynfwourZ:/opt/spark# pico input.txt
+
+root@iZ8psi143pa0pfeynfwourZ:/opt/spark# bin/spark-shell
+
+scala> val inputfile = sc.textFile("input.txt")
+
+scala> val counts = inputfile.flatMap(line => line.split(" ")).map(word => (word,1)).reduceByKey(_+_);
+
+scala> counts.cache()
+
+scala> counts.saveAsTextFile("output")
+
+scala> root@iZ8psi143pa0pfeynfwourZ:/opt/spark# cd output/
+
+root@iZ8psi143pa0pfeynfwourZ:/opt/spark/output# cat part-00000
+
